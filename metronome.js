@@ -53,3 +53,26 @@ class BaseMetronome {
   }
 }
 
+class ScheduledMetronome extends BaseMetronome {
+  constructor(tempo, ticks = 1000) {
+    super(tempo);
+    this.scheduledTicks = ticks;
+  }
+  
+  start(callbackFn) {
+    super.start();
+    const timeoutDuration = (60 / this.tempo);
+    
+    let now = this.audioCtx.currentTime;
+      
+    // Schedule all the clicks ahead.
+    for (let i = 0; i < this.scheduledTicks; i++) {
+      this.clickAtTime(now);
+      const x = now;
+      setTimeout(() => callbackFn(x), now * 1000);
+      now += timeoutDuration;
+    }
+  }
+}
+
+export { ScheduledMetronome };
